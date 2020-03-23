@@ -1,0 +1,39 @@
+﻿@using Chat.Models;
+
+@model List<OrderList>
+@{
+    ViewBag.Title = "Index";
+}
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<h2>Index</h2>
+
+<script>
+    var orders = [{
+        orderNo: '161afec7-380a-43e6-9bf7-614d5210dbd9',
+        customerName: 'ABC',
+        item: ['pp', 'vp'],
+        cost: 200
+    },
+    {
+        orderNo: 'f8d4068e-e81f-4231-b623-6e64cf996b01',
+        customerName: 'ABC',
+        item: ['pp', 'bp'],
+        cost: 300
+    }]
+
+
+    var orderList = [];
+
+</script>
+
+<div id="div-main">
+    @Html.Partial("Chat", Model);
+    
+</div>
+
+
+

@@ -1,0 +1,84 @@
+﻿@using  Chat.Models
+
+
+@model List<OrderList>
+@{
+    ViewBag.Title = "Chat";
+}
+
+
+
+<div id="ems-list-wrap" class="ems-list-wrap">
+    <div class="ems-page-banner">
+        <span>Order List</span>
+    </div>
+    <div class="ems-page-banner"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ems-list-no-lr-pad">
+       
+        <div class="x-scroll">
+            <table class="ems-list-table-width">
+                <thead>
+                    <tr class="ems-list-first-tr-color">
+                        <th width="22%">Order No</th>
+                        <th width="22%">Customer Name</th>
+                        <th width="22%">Total Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        foreach (OrderList ol in Model)
+                        {
+                            <tr>
+                                <td>@ol.OrderNo</td>
+                                <td>@ol.CustomerName</td>
+                                <td>@ol.TotalCost</td>
+                                
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <button onclick="Add()">Create Order</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function Add() {
+        try {
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                url: "/Chat/Add",
+                global: false,
+                cache: false,
+                contentType: "application/json",
+                processData: false,
+                success: function (data, textstatus, xmlhttprequest) {
+                    $('#div-main').html(data);
+                },
+                error: function (textstatus, errorthrown) {
+                    //alert(errorthrown);
+                    console.log(errorthrown);
+                }
+            });
+        } catch (e) {
+
+        }
+    }
+</script>
+
+
+<script>
+    console.log(@Html.Raw(Json.Encode(Model)));
+
+    if (orderList.length == 0) {
+
+    }
+    orderList=@Html.Raw(Json.Encode(Model)));
+</script>

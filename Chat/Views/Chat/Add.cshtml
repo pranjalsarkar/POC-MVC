@@ -1,0 +1,184 @@
+﻿@using Chat.Models;
+
+@model Order
+@{
+    ViewBag.Title = "Add";
+}
+
+<div class="well clearfix" style="width:75%">
+    <div class="form-horizontal form-widgets col-lg-10">
+
+        <fieldset>
+            <legend>Create Order</legend>
+
+
+
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="inputEmail" class="control-label col-xs-4"><span class="red">*</span><span>Order No</span></label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" placeholder="" id="orderNum" value="@Model.OrderNo" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="control-label col-xs-4">Customer Name</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" placeholder="" id="cn" value="@Model.CustomerName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="control-label col-xs-4"><span class="red">*</span><span>Select Chats</span></label>
+                    <div class="col-xs-8">
+                        <input type="checkbox" id="pp" name="ct" value="75"  /><label for="pp">Pani Puri</label><br />
+                        <input type="checkbox" id="vp" name="ct" value="85" /><label for="vp">Dahi vada</label><br />
+                        <input type="checkbox" id="bp" name="ct" value="60" /><label for="bp">Bhel Puri</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="control-label col-xs-4">Total Cost</label>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" placeholder="" id="tc" readonly/>
+                    </div>
+                </div>
+            </form>
+
+            <p>
+                <input type="submit" value="Save" onclick="saveOrder()" />
+                <input type="button" value="Cancel" />
+            </p>
+        </fieldset>
+
+
+    </div>
+</div>
+
+<script>
+    var orderItems = [];
+    //var favorite = [];
+
+    $(document).ready(function () {
+        
+        $('#pp').change(function () {
+            var favorite = [];
+            orderItems = [];
+            $.each($("input[name='ct']:checked"), function () {
+                favorite.push($(this).val());
+                orderItems.push($(this))
+                //console.log(favorite);
+                
+            });
+            calcCost(favorite);
+        });
+
+        $('#vp').change(function () {
+            var favorite = [];
+            orderItems = [];
+            $.each($("input[name='ct']:checked"), function () {
+                favorite.push($(this).val());
+                orderItems.push($(this))
+            });
+            calcCost(favorite);
+        });
+
+        $('#bp').change(function () {
+            var favorite = [];
+            orderItems = [];
+            $.each($("input[name='ct']:checked"), function () {
+                favorite.push($(this).val());
+                orderItems.push($(this))
+            });
+            calcCost(favorite);
+        });
+    })
+
+    function calcCost(cts) {
+        if (cts.length > 0) {
+            var cost=0;
+            for (i = 0; i < cts.length; i++) {
+                cost = cost + parseFloat(cts[i]);
+
+            }
+
+            console.log(cost);
+
+            var gst = (cost / 100) * 5;
+            cost += gst;
+
+            console.log(cost);
+
+            $('#tc').val(cost);
+
+        }
+    }
+
+    function saveOrder() {
+
+        var order = {
+            OrderNo: '',
+            CustomerName: '',
+            //item: [],
+            TotalCost:0
+        }
+
+        order.OrderNo = $('#orderNum').val();
+        order.CustomerName = $('#cn').val();
+        //order.item = [...orderItems];
+        order.TotalCost = parseFloat($('#tc').val());
+
+        console.log(order);
+
+        orderList.push(order);
+
+        save(order);
+
+           //move to list
+        
+    }
+
+    function cancel() {
+        try {
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                url: "/Chat/List",
+                global: false,
+                cache: false,
+                contentType: "application/json",
+                success: function (data, textstatus, xmlhttprequest) {
+                    $('#div-main').html(data);
+                },
+                error: function (textstatus, errorthrown) {
+                    //alert(errorthrown);
+                    console.log(errorthrown);
+                }
+            });
+        } catch (e) {
+
+        }
+    }
+
+    function save(d) {
+        try {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/Chat/CreateOrder",
+                global: false,
+                cache: false,
+                contentType: "application/json",
+                data:JSON.stringify(d),
+                success: function (data, textstatus, xmlhttprequest) {
+                    //$('#div-main').html(data);
+                    cancel();
+                },
+                error: function (textstatus, errorthrown) {
+                    //alert(errorthrown);
+                    cancel();
+                    console.log(errorthrown);
+                }
+            });
+        } catch (e) {
+
+        }
+    }
+</script>
